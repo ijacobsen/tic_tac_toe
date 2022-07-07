@@ -56,10 +56,48 @@ const gameBoard = (() => {
         }
         console.log(board);
     }
-    return {markSquare}
+
+    const getSquareVal = function (idx) {
+        let row = parseInt((idx/3));
+        let col = idx%3;
+        let squareVal = board[row][col];
+        console.log(`square val of idx:${idx} is ${squareVal}`);
+        if (squareVal === null){
+            squareVal = '';
+        }
+        return squareVal;
+    }
+
+    return {markSquare, getSquareVal}
 })();
 
 // define a displayController as a module
+const displayController = (() => {
+
+    // init board
+    let board = document.createElement('div');
+    board.setAttribute('id', 'board');
+    for (let i=0; i<9; i++) {
+        let box = document.createElement('div');
+        box.setAttribute('class', 'box');
+        box.setAttribute('id', `box-${i}`);
+        box.textContent = '';
+        board.appendChild(box);
+    }
+    let page = document.querySelector('.page');
+    page.appendChild(board);
+
+    // update board
+    const renderBoard = function (gBoard) {
+        for (let idx=0; idx<9; idx++) {
+            let box = document.querySelector(`#box-${idx}`);
+            let text = gBoard.getSquareVal(idx);
+            box.textContent = text;
+        }
+    }
+
+    return {renderBoard}
+})();
 
 // define a player as a factory
 const playerFactory = (name) => {
@@ -71,4 +109,6 @@ const playerFactory = (name) => {
 let joe = playerFactory('joe');
 let board = gameBoard;
 gameBoard.markSquare(joe, [0, 0]);
+let controller = displayController;
+controller.renderBoard(board);
 */

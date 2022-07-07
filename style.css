@@ -5,3 +5,28 @@ html, body {
     font-family: Roboto, sans-serif;
 }
 
+.page {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    justify-items: center;
+}
+
+#board {
+    display: grid;
+    grid-template-columns: 110px 110px 110px;
+    grid-template-rows: auto;
+    background-color: blue;
+}
+
+.box {
+    display: flex;
+    min-width: 100px;
+    height: 100px;
+    min-height: 100px;
+    width: 100px;
+    background-color: aqua;
+    border-color:black;
+    border: 10px;
+}
