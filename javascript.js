@@ -46,6 +46,21 @@ function playGame() {
     gC.newGame();
 }
 
+var resetButton = document.getElementById('resetButton');
+resetButton.addEventListener('click', resetGame);
+function resetGame() {
+    let board = document.getElementById('board');
+    if (board !== null) {
+        for (let idx=0; idx<9; idx++) {
+            let box = document.querySelector(`#box-${idx}`);
+            let text = '';
+            box.textContent = text;
+        }
+    }
+    let gC = gameController;
+    gC.newGame();
+}
+
 // define a player as a factory
 const playerFactory = (name) => {
     let symbol = name;
@@ -54,10 +69,18 @@ const playerFactory = (name) => {
 
 // define a gameBoard as a module
 const gameBoard = (() => {
+
     let board = [
         [null, null, null], 
         [null, null, null], 
         [null, null, null]];
+
+    const emptyBoard = function () {
+        board = [
+            [null, null, null], 
+            [null, null, null], 
+            [null, null, null]];
+    }
 
     const markSquare = function (player, position) {
         let row = position[0];
@@ -84,7 +107,7 @@ const gameBoard = (() => {
         console.log(board);
     }
 
-    return {markSquare, getSquareVal, reportBoard}
+    return {emptyBoard, markSquare, getSquareVal, reportBoard}
 })();
 
 // define a displayController as a module
@@ -112,11 +135,36 @@ const displayController = (() => {
         }
     }
 
-    return {renderBoard}
+    // erase board
+    const eraseBoard = function () {
+        let board = document.getElementById('board');
+        if (board !== null) {
+            let page = document.getElementById('page');
+            page.removeChild(board);
+        }
+    }
+
+    return {renderBoard, eraseBoard}
 })();
 
 // define gameController
 const gameController = (() => {
+
+    // render empty gameboard
+    let gBoard = gameBoard;
+
+    // render a display controller
+    let dController = displayController;
+
+    const resetGame = function () {
+        
+        // render empty board
+        dController.eraseBoard();
+
+        // call new game
+        newGame();
+
+    }
 
     // start game
     const newGame = function () {
@@ -129,11 +177,8 @@ const gameController = (() => {
         let p_2_name = 'mary'
         let p_2 = playerFactory(p_2_name);
     
-        // render empty gameboard
-        let gBoard = gameBoard;
-
-        // render a display controller
-        let dController = displayController;
+        // reset gameboard
+        gBoard.emptyBoard();
 
         // play round
         let winner = playRound(p_1, p_2, gBoard, dController);
@@ -145,6 +190,7 @@ const gameController = (() => {
         else {
             console.log('its a tie');
         }
+
     }
 
     // play a round
