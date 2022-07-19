@@ -57,9 +57,6 @@ function resetGame() {
             box.textContent = text;
         }
     }
-
-    // remove onclicks on boxes
-
 }
 
 // define a player as a factory
@@ -77,10 +74,22 @@ const gameBoard = (() => {
         [null, null, null]];
 
     const emptyBoard = function () {
+
+        // empty the board
         board = [
             [null, null, null], 
             [null, null, null], 
             [null, null, null]];
+        
+        /*
+        // remove onclicks on boxes... not sure if this is necessary
+        for (let i=0; i<9; i++){
+            let box = document.getElementById(`box-${i}`);
+            let clone = box.cloneNode(true);
+            box.parentNode.replaceChild(clone, box);
+        }
+        */
+        
     }
 
     const markSquare = function (player, position) {
@@ -218,15 +227,7 @@ const gameController = (() => {
         gBoard.emptyBoard();
 
         // play round
-        let winner = playRound(p_1, p_2, gBoard, dController);
-
-        // display game winner
-        if (winner != null){
-            console.log(`${winner.name} wins!`);
-        }
-        else {
-            console.log('its a tie');
-        }
+        playRound(p_1, p_2, gBoard, dController);
 
     }
 
@@ -247,21 +248,14 @@ const gameController = (() => {
                     playerSelection = box_id;
 
                     if (counter % 2 === 0) {
-                        console.log('player 1 turn');
                         curr_player = p_1;
-                        console.log(curr_player)
                     }
                     else {
-                        console.log('player 2 turn');
                         curr_player = p_2;
-                        console.log(curr_player);
                     }
 
                     // mark square
                     gBoard.markSquare(curr_player, playerSelection);
-
-                    // report board to console
-                    gBoard.reportBoard();
         
                     // increment counter
                     counter++;
@@ -277,7 +271,10 @@ const gameController = (() => {
                         return winner;
                     }
 
-
+                    if (counter == 9) {
+                        console.log('its a tie');
+                        return null;
+                    }
                 }
 
 
