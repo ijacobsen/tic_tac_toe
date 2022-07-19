@@ -84,8 +84,8 @@ const gameBoard = (() => {
     }
 
     const markSquare = function (player, position) {
-        let row = position[0];
-        let col = position[1];
+        let row = parseInt((position/3));
+        let col = position%3;
         if (board[row][col] === null) {
             board[row][col] = player.symbol;
         }
@@ -142,7 +142,7 @@ const gameBoard = (() => {
             if (board[0][0] === board[1][1]){
                 if (board[0][0] === board[2][2]){
                     let winner = board[0][0];
-                    if (winner !== ''){
+                    if (winner !== null){
                         return winner;
                     }
                 }
@@ -151,7 +151,7 @@ const gameBoard = (() => {
             if (board[0][2] === board[1][1]){
                 if (board[0][2] === board[2][0]){
                     let winner = board[0][2];
-                    if (winner !== ''){
+                    if (winner !== null){
                         return winner;
                     }
                 }
@@ -159,7 +159,7 @@ const gameBoard = (() => {
         }
 
 
-        return '';
+        return null;
 
     }
 
@@ -233,19 +233,72 @@ const gameController = (() => {
     // play a round
     const playRound = function (p_1, p_2, gBoard, dController) {
 
-        let curr_player = null;
-
         var box = document.querySelectorAll(".box");
         box.forEach(function(element) {
             element.onclick = function() {
-                alert(curr_player.name + ' is choosing ' + this.id);
+
+                // get players selection
+                let box_id = this.id.slice(-1);
+
+                // check if selection is valid (ie empty)
+                if (gBoard.getSquareVal(box_id) === ''){
+
+                    // store selection
+                    playerSelection = box_id;
+
+                    if (counter % 2 === 0) {
+                        console.log('player 1 turn');
+                        curr_player = p_1;
+                        console.log(curr_player)
+                    }
+                    else {
+                        console.log('player 2 turn');
+                        curr_player = p_2;
+                        console.log(curr_player);
+                    }
+
+                    // mark square
+                    gBoard.markSquare(curr_player, playerSelection);
+
+                    // report board to console
+                    gBoard.reportBoard();
+        
+                    // increment counter
+                    counter++;
+                
+                    // render board
+                    dController.renderBoard(gBoard);
+        
+                    // check if game over
+                    checkResult = gBoard.checkEnd();
+                    if (checkResult !== null) {
+                        winner = curr_player;
+                        console.log(`${winner.name} wins!`)
+                        return winner;
+                    }
+
+
+                }
+
+
         }});
 
+        var counter = 0;
+        var playerSelection = null;
+        var curr_player = null;
+        let winner = null;
+        
+
+
+
+        /*
         const makeMove = function(obj) {
             let move = window.prompt(obj.player.name + ', whats your move? x,y', '');
             obj.board.markSquare(obj.player, [move[0], move.slice(-1)]);
             obj.display.renderBoard(obj.board);
         }
+
+
 
         let checkResult = null;
         let obj = null;
@@ -276,6 +329,8 @@ const gameController = (() => {
 
         // if no one won then return a tie
         return null;
+
+        */
 
     }
 
