@@ -31,3 +31,7 @@ html, body {
     border-color:black;
     border: 10px;
 }
+
+.box:hover {
+    background-color: red;
+}

@@ -57,8 +57,9 @@ function resetGame() {
             box.textContent = text;
         }
     }
-    let gC = gameController;
-    gC.newGame();
+
+    // remove onclicks on boxes
+
 }
 
 // define a player as a factory
@@ -88,14 +89,12 @@ const gameBoard = (() => {
         if (board[row][col] === null) {
             board[row][col] = player.symbol;
         }
-        //console.log(board);
     }
 
     const getSquareVal = function (idx) {
         let row = parseInt((idx/3));
         let col = idx%3;
         let squareVal = board[row][col];
-        //console.log(`square val of idx:${idx} is ${squareVal}`);
         if (squareVal === null){
             squareVal = '';
         }
@@ -107,7 +106,64 @@ const gameBoard = (() => {
         console.log(board);
     }
 
-    return {emptyBoard, markSquare, getSquareVal, reportBoard}
+    const checkEnd = function() {
+
+        // check horizontal lines
+        for (let i=0; i<3; i++){
+            if (board[i][0] !== null){
+                if (board[i][0] === board[i][1]) {
+                    if (board[i][0] === board[i][2]) {
+                        let winner = board[i][0];
+                        if (winner !== null) {
+                            return winner;
+                        }
+                    }
+                }
+            }
+        }
+
+        // check vertical lines
+        for (let i=0; i<3; i++){
+            if (board[0][i] !== null){
+                if (board[0][i] === board[1][i]) {
+                    if (board[0][i] === board[2][i]) {
+                        let winner = board[0][i];
+                        if (winner !== null) {
+                            return winner;
+                        }
+                    }
+                }
+            }
+        }
+
+        // check diagonal lines
+        if (board[1][1] !== null){
+
+            if (board[0][0] === board[1][1]){
+                if (board[0][0] === board[2][2]){
+                    let winner = board[0][0];
+                    if (winner !== ''){
+                        return winner;
+                    }
+                }
+            }
+
+            if (board[0][2] === board[1][1]){
+                if (board[0][2] === board[2][0]){
+                    let winner = board[0][2];
+                    if (winner !== ''){
+                        return winner;
+                    }
+                }
+            }
+        }
+
+
+        return '';
+
+    }
+
+    return {emptyBoard, markSquare, getSquareVal, reportBoard, checkEnd}
 })();
 
 // define a displayController as a module
@@ -135,36 +191,17 @@ const displayController = (() => {
         }
     }
 
-    // erase board
-    const eraseBoard = function () {
-        let board = document.getElementById('board');
-        if (board !== null) {
-            let page = document.getElementById('page');
-            page.removeChild(board);
-        }
-    }
-
-    return {renderBoard, eraseBoard}
+    return {renderBoard}
 })();
 
 // define gameController
 const gameController = (() => {
 
-    // render empty gameboard
+    // render empty gameboard (model)
     let gBoard = gameBoard;
 
-    // render a display controller
+    // render a display controller (view)
     let dController = displayController;
-
-    const resetGame = function () {
-        
-        // render empty board
-        dController.eraseBoard();
-
-        // call new game
-        newGame();
-
-    }
 
     // start game
     const newGame = function () {
@@ -196,62 +233,13 @@ const gameController = (() => {
     // play a round
     const playRound = function (p_1, p_2, gBoard, dController) {
 
-        const checkEnd = function(gBoard) {
+        let curr_player = null;
 
-            // check horizontal lines
-            for (let i=0; i<3; i++){
-                if (gBoard.getSquareVal(i*3) !== ''){
-                    if (gBoard.getSquareVal(i*3) === gBoard.getSquareVal(i*3+1)) {
-                        if (gBoard.getSquareVal(i*3) === gBoard.getSquareVal(i*3+2)) {
-                            let winner = gBoard.getSquareVal(i*3);
-                            if (winner !== '') {
-                                return winner;
-                            }
-                        }
-                    }
-                }
-            }
-
-            // check vertical lines
-            for (let i=0; i<3; i++){
-                if (gBoard.getSquareVal(i) !== ''){
-                    if (gBoard.getSquareVal(i) === gBoard.getSquareVal(i+3)) {
-                        if (gBoard.getSquareVal(i+3) === gBoard.getSquareVal(i+6)) {
-                            let winner = gBoard.getSquareVal(i);
-                            if (winner !== '') {
-                                return winner;
-                            }
-                        }
-                    }
-                }
-            }
-
-            // check diagonal lines
-            if (gBoard.getSquareVal(4) !== ''){
-
-                // 0 4 8
-                if (gBoard.getSquareVal(0) === gBoard.getSquareVal(4)){
-                    if (gBoard.getSquareVal(0) === gBoard.getSquareVal(8)){
-                        let winner = gBoard.getSquareVal(0);
-                        if (winner !== ''){
-                            return winner;
-                        }
-                    }
-                }
-
-                // 2 4 6
-                if (gBoard.getSquareVal(2) === gBoard.getSquareVal(4)){
-                    if (gBoard.getSquareVal(2) === gBoard.getSquareVal(6)){
-                        let winner = gBoard.getSquareVal(2);
-                        if (winner !== ''){
-                            return winner;
-                        }
-                    }
-                }
-            }
-
-            return '';
-        }
+        var box = document.querySelectorAll(".box");
+        box.forEach(function(element) {
+            element.onclick = function() {
+                alert(curr_player.name + ' is choosing ' + this.id);
+        }});
 
         const makeMove = function(obj) {
             let move = window.prompt(obj.player.name + ', whats your move? x,y', '');
@@ -269,7 +257,7 @@ const gameController = (() => {
             makeMove(obj);
         
             // check if game over
-            checkResult = checkEnd(gBoard);
+            checkResult = gBoard.checkEnd();
             if (checkResult !== '') {
                 return p_1;
             }
@@ -279,7 +267,7 @@ const gameController = (() => {
             makeMove(obj);
         
             // check if game over
-            checkResult = checkEnd(gBoard);
+            checkResult = gBoard.checkEnd();
             if (checkResult !== '') {
                 return p_2;
             }
@@ -291,22 +279,7 @@ const gameController = (() => {
 
     }
 
-    // restart game 
-
     // public members
     return {newGame}
 })();
 
-
-/*
-let joe = playerFactory('joe');
-let board = gameBoard;
-gameBoard.markSquare(joe, [0, 0]);
-let dController = displayController;
-dController.renderBoard(board);
-*/
-
-/*
-let gC = gameController;
-gC.newGame();
-*/
