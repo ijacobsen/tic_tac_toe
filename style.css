@@ -3,6 +3,7 @@ html, body {
     margin: 0;
     overflow: auto;
     font-family: Roboto, sans-serif;
+    background-color: #f7cac9;
 }
 
 .page {
@@ -14,24 +15,49 @@ html, body {
     justify-items: center;
 }
 
+.section {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-content: space-around;
+    align-items: center;
+    justify-items: center;
+}
+
+#title {
+    font-size: 3rem;
+}
+
 #board {
+
     display: grid;
     grid-template-columns: 110px 110px 110px;
     grid-template-rows: auto;
-    background-color: blue;
+    width: 330px;
+
 }
 
 .box {
     display: flex;
-    min-width: 100px;
-    height: 100px;
-    min-height: 100px;
-    width: 100px;
-    background-color: aqua;
+    font-size: 4rem;
+    justify-content: center;
+    justify-items: center;
+    align-items: center;
+    align-content: center;
+    min-width: 110px;
+    height: 110px;
+    min-height: 110px;
+    width: 110px;
+    background-color: #034f84;
     border-color:black;
-    border: 10px;
+    color: #f7786b;
 }
 
 .box:hover {
-    background-color: red;
+    background-color: #92a8d1;
+}
+
+#instructions {
+    font-style: italic;
+    font-size: 0.8rem;
 }

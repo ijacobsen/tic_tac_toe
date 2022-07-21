@@ -10,21 +10,35 @@
 </head>
 <body>
     <div class="page", id="page">
-        <div id="playerPanel">
-            <form action="#" id="playerNames">
-                <label for="p1"> Player One Name: </label>
-                <input type="text" name="p1_name">
-                <label for="p2"> Player Two Name: </label>
-                <input type="text" name="p2_name">
-            </form>
+        <div class="section" id="top">
+            <div id="title">
+                <p> Zep Tac Toe </p>
+            </div>
         </div>
-        <div id="buttonPanel">
-            <button type="submit" form="playerNames"> Play Game </button>
-            <button id="resetButton"> Reset Game </button>
+        <div class="section" id="middle">
+            <div id="playerPanel">
+                <form action="#" id="playerNames">
+                    <label for="p1"> Player One Name: </label>
+                    <input type="text" name="p1_name">
+                    <label for="p2"> Player Two Name: </label>
+                    <input type="text" name="p2_name">
+                </form>
+            </div>
+            <div id="buttonPanel">
+                <button type="submit" form="playerNames"> Play Game </button>
+                <button id="resetButton"> Reset Game </button>
+            </div>
+            <div id="board"> </div>
+            <div id="winnerPanel"> </div>
         </div>
-        <div id="board">
-        </div>
-        <div id="winnerPanel">
+        <div class="section" id="bottom">
+            <div id="instructions">
+                <ul>
+                    <li> To start a new game, enter the players names in their respective boxes, then
+                        click the 'Play Game' button. </li>
+                    <li> To reset the board for a fresh start, click the 'Reset Game' button. </li>
+                </ul>
+            </div>
         </div>
     </div>
 </body>

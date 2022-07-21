@@ -47,7 +47,6 @@ playButton.addEventListener('submit', function(e) {
 
     // read player names
     const data = new FormData(playButton);
-    console.log(data);
     let p_1_name = data.get('p1_name');
     if (p_1_name === '') {
         p_1_name = 'Player One';
@@ -193,6 +192,21 @@ const displayController = (() => {
         box.setAttribute('class', 'box');
         box.setAttribute('id', `box-${i}`);
         box.textContent = '';
+        if (i%3 === 1){
+            box.style.borderLeft = '4px solid black';
+        }
+
+        if (i%3 === 2){
+            box.style.borderLeft = 'solid 4px black';
+        }
+        
+        if (parseInt(i/3) === 0) {
+            box.style.borderBottom = 'solid 4px black';
+        }
+        if (parseInt(i/3) === 2) {
+            box.style.borderTop = 'solid 4px black';
+        }
+
         board.appendChild(box);
     }
 
@@ -292,7 +306,6 @@ const gameController = (() => {
                     let result = roundLogic(box_id)
 
                     // check if game is over
-                    console.log(result);
                     if (result !== null){
 
                         // determine text to display
