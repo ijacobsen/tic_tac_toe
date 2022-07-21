@@ -56,7 +56,13 @@ playButton.addEventListener('submit', function(e) {
     const data = new FormData(playButton);
     console.log(data);
     let p_1_name = data.get('p1_name');
+    if (p_1_name === '') {
+        p_1_name = 'Player One';
+    }
     let p_2_name = data.get('p2_name');
+    if (p_2_name === '') {
+        p_2_name = 'Player Two';
+    }
 
     let gC = gameController;
     console.log(p_1_name);
