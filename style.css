@@ -18,10 +18,7 @@ html, body {
 .section {
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
-    align-content: space-around;
     align-items: center;
-    justify-items: center;
 }
 
 #title {
@@ -29,12 +26,10 @@ html, body {
 }
 
 #board {
-
     display: grid;
     grid-template-columns: 110px 110px 110px;
     grid-template-rows: auto;
     width: 330px;
-
 }
 
 .box {
@@ -61,3 +56,24 @@ html, body {
     font-style: italic;
     font-size: 0.8rem;
 }
+
+#buttonPanel {
+    margin: 10px;
+}
+
+#playerPanel {
+    flex-direction: column;
+    padding: 2px;
+    margin: 5px;
+}
+
+.name {
+    margin: 5px;
+}
+
+#board {
+    margin: 5px
+}
+
+
+
