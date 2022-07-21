@@ -38,13 +38,32 @@ maker.
 
 */
 
-
+/*
 var playButton = document.getElementById('playButton');
 playButton.addEventListener('click', playGame);
 function playGame() {
     let gC = gameController;
     gC.newGame();
 }
+*/
+
+
+var playButton = document.getElementById('playerNames');
+playButton.addEventListener('submit', function(e) {
+    
+    e.preventDefault();
+
+    const data = new FormData(playButton);
+    console.log(data);
+    let p_1_name = data.get('p1_name');
+    let p_2_name = data.get('p2_name');
+
+    let gC = gameController;
+    console.log(p_1_name);
+    console.log('made it here');
+    gC.newGame(p_1_name, p_2_name);
+
+})
 
 var resetButton = document.getElementById('resetButton');
 resetButton.addEventListener('click', resetGame);
@@ -213,14 +232,16 @@ const gameController = (() => {
     let dController = displayController;
 
     // start game
-    const newGame = function () {
+    const newGame = function (p_1_name, p_2_name) {
+
+        // read player names form
 
         // get player 1 name
-        let p_1_name = 'joe';
+        //let p_1_name = 'joe';
         let p_1 = playerFactory(p_1_name);
 
         // get player 2 name
-        let p_2_name = 'mary'
+        //let p_2_name = 'mary'
         let p_2 = playerFactory(p_2_name);
     
         // reset gameboard

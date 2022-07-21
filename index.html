@@ -10,8 +10,16 @@
 </head>
 <body>
     <div class="page", id="page">
+        <div id="playerPanel">
+            <form action="#" id="playerNames">
+                <label for="p1"> Player One Name: </label>
+                <input type="text" name="p1_name" value="Player One">
+                <label for="p2"> Player Two Name: </label>
+                <input type="text" name="p2_name" value="Player Two">
+            </form>
+        </div>
         <div id="buttonPanel">
-            <button id="playButton"> Play Game </button>
+            <button type="submit" form="playerNames"> Play Game </button>
             <button id="resetButton"> Reset Game </button>
         </div>
     </div>
