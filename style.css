@@ -76,4 +76,9 @@ html, body {
 }
 
 
-
+button {
+    border-radius: 7px;
+    padding: 3px;
+    padding-left: 2px;
+    background-color: white;
+}
