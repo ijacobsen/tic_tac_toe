@@ -38,14 +38,6 @@ maker.
 
 */
 
-/*
-var playButton = document.getElementById('playButton');
-playButton.addEventListener('click', playGame);
-function playGame() {
-    let gC = gameController;
-    gC.newGame();
-}
-*/
 
 
 var playButton = document.getElementById('playerNames');
@@ -53,6 +45,7 @@ playButton.addEventListener('submit', function(e) {
     
     e.preventDefault();
 
+    // read player names
     const data = new FormData(playButton);
     console.log(data);
     let p_1_name = data.get('p1_name');
@@ -64,9 +57,8 @@ playButton.addEventListener('submit', function(e) {
         p_2_name = 'Player Two';
     }
 
+    // start game
     let gC = gameController;
-    console.log(p_1_name);
-    console.log('made it here');
     gC.newGame(p_1_name, p_2_name);
 
 })
@@ -81,12 +73,13 @@ function resetGame() {
             let text = '';
             box.textContent = text;
         }
+        let winnerPanel = document.getElementById('winnerPanel');
+        winnerPanel.textContent = '';
     }
 }
 
 // define a player as a factory
-const playerFactory = (name) => {
-    let symbol = name;
+const playerFactory = (name, symbol) => {
     return {name, symbol}
 }
 
@@ -105,16 +98,6 @@ const gameBoard = (() => {
             [null, null, null], 
             [null, null, null], 
             [null, null, null]];
-        
-        /*
-        // remove onclicks on boxes... not sure if this is necessary
-        for (let i=0; i<9; i++){
-            let box = document.getElementById(`box-${i}`);
-            let clone = box.cloneNode(true);
-            box.parentNode.replaceChild(clone, box);
-        }
-        */
-        
     }
 
     const markSquare = function (player, position) {
@@ -204,8 +187,7 @@ const gameBoard = (() => {
 const displayController = (() => {
 
     // init board
-    let board = document.createElement('div');
-    board.setAttribute('id', 'board');
+   let board = document.getElementById('board');
     for (let i=0; i<9; i++) {
         let box = document.createElement('div');
         box.setAttribute('class', 'box');
@@ -213,8 +195,6 @@ const displayController = (() => {
         box.textContent = '';
         board.appendChild(box);
     }
-    let page = document.querySelector('.page');
-    page.appendChild(board);
 
     // update board
     const renderBoard = function (gBoard) {
@@ -243,12 +223,10 @@ const gameController = (() => {
         // read player names form
 
         // get player 1 name
-        //let p_1_name = 'joe';
-        let p_1 = playerFactory(p_1_name);
+        let p_1 = playerFactory(p_1_name, 'X');
 
         // get player 2 name
-        //let p_2_name = 'mary'
-        let p_2 = playerFactory(p_2_name);
+        let p_2 = playerFactory(p_2_name, 'O');
     
         // reset gameboard
         gBoard.emptyBoard();
@@ -260,6 +238,42 @@ const gameController = (() => {
 
     // play a round
     const playRound = function (p_1, p_2, gBoard, dController) {
+
+        const roundLogic = function(playerSelection){
+
+            // determine player turn
+            if (counter % 2 === 0) {
+                curr_player = p_1;
+            }
+            else {
+                curr_player = p_2;
+            }
+
+            // mark square
+            gBoard.markSquare(curr_player, playerSelection);
+
+            // increment counter
+            counter++;
+        
+            // render board
+            dController.renderBoard(gBoard);
+
+            // check if game over
+            checkResult = gBoard.checkEnd();
+            if (checkResult !== null) {
+                winner = curr_player;
+                console.log(`${winner.name} wins!`)
+                return winner;
+            }
+            else if (counter == 9) {
+                console.log('its a tie');
+                return '';
+            }
+            else {
+                return null;
+            }
+        }
+
 
         var box = document.querySelectorAll(".box");
         box.forEach(function(element) {
@@ -274,87 +288,38 @@ const gameController = (() => {
                     // store selection
                     playerSelection = box_id;
 
-                    if (counter % 2 === 0) {
-                        curr_player = p_1;
-                    }
-                    else {
-                        curr_player = p_2;
-                    }
+                    // run logic
+                    let result = roundLogic(box_id)
 
-                    // mark square
-                    gBoard.markSquare(curr_player, playerSelection);
-        
-                    // increment counter
-                    counter++;
-                
-                    // render board
-                    dController.renderBoard(gBoard);
-        
-                    // check if game over
-                    checkResult = gBoard.checkEnd();
-                    if (checkResult !== null) {
-                        winner = curr_player;
-                        console.log(`${winner.name} wins!`)
-                        return winner;
-                    }
+                    // check if game is over
+                    console.log(result);
+                    if (result !== null){
 
-                    if (counter == 9) {
-                        console.log('its a tie');
-                        return null;
+                        // determine text to display
+                        if (result === ''){
+                            var displayText = "It's a Tie!";
+                        }
+                        else {
+                            var displayText = `${result.name} wins!`;
+                        }
+
+                        // render winner result on page
+                        let winnerPanel = document.getElementById('winnerPanel');
+                        winnerPanel.textContent = displayText;
+
+                        // finish game by filling in all unused spaces
+                        for (let i=0; i<9; i++){
+                            gBoard.markSquare(p_1, i);
+                        }
+
                     }
                 }
-
-
         }});
 
         var counter = 0;
         var playerSelection = null;
         var curr_player = null;
         let winner = null;
-        
-
-
-
-        /*
-        const makeMove = function(obj) {
-            let move = window.prompt(obj.player.name + ', whats your move? x,y', '');
-            obj.board.markSquare(obj.player, [move[0], move.slice(-1)]);
-            obj.display.renderBoard(obj.board);
-        }
-
-
-
-        let checkResult = null;
-        let obj = null;
-
-        for (let i=0; i<9; i++) {
-
-            // player 1 move
-            obj = {player: p_1, board: gBoard, display: dController};
-            makeMove(obj);
-        
-            // check if game over
-            checkResult = gBoard.checkEnd();
-            if (checkResult !== '') {
-                return p_1;
-            }
-
-            // player 2 move
-            obj = {player: p_2, board: gBoard, display: dController};
-            makeMove(obj);
-        
-            // check if game over
-            checkResult = gBoard.checkEnd();
-            if (checkResult !== '') {
-                return p_2;
-            }
-
-        }
-
-        // if no one won then return a tie
-        return null;
-
-        */
 
     }
 
